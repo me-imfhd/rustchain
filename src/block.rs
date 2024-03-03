@@ -1,5 +1,7 @@
 use std::fmt::Debug;
 
+use crate::{u128_bytes, u32_bytes, u64_bytes, Hashable};
+
 use super::BlockHash;
 
 pub struct Block {
@@ -42,5 +44,23 @@ impl Block {
             // we make here hash with the help of the above data in future
             block_hash: vec![0; 32],
         }
+    }
+}
+
+impl Hashable for Block {
+    fn block_to_bytes(&self) -> Vec<u8> {
+        let mut bytes: Vec<u8> = vec![];
+
+        // convert index which is u32 to an array of u8 values and extending that to bytes variable
+        bytes.extend(&u32_bytes(&self.index));
+        // convert nonce (u64) to array of u8
+        bytes.extend(&u64_bytes(&self.nonce));
+        // convert timestamp (u128) to array of u8
+        bytes.extend(&u128_bytes(&self.timestamp));
+        // convert payload to byte
+        bytes.extend(self.payload.as_bytes());
+        bytes.extend(&self.prev_block_hash);
+
+        bytes
     }
 }
