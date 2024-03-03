@@ -1,3 +1,6 @@
+mod block;
+pub use crate::block::Block;
+
 use std::time::{SystemTime, UNIX_EPOCH};
 
 type BlockHash = Vec<u8>; // This is gonna be the type of our block hash (its just an array of u8 integer values lol )
