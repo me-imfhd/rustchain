@@ -17,7 +17,7 @@ impl Debug for Block {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Block[{}]: \n Block Hash: {} \n timestamp: {} \n payload: {} ",
+            "\nBlock[{}]: \nBlock Hash: {} \ntimestamp: {} \npayload: {} \n",
             &self.index,
             &hex::encode(&self.block_hash),
             &self.timestamp,
