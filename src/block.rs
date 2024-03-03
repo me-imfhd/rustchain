@@ -23,3 +23,24 @@ impl Debug for Block {
         )
     }
 }
+
+// this has a fn to create blocks
+impl Block {
+    pub fn create_new_block(
+        index: u32,
+        nonce: u64,
+        timestamp: u128,
+        payload: String,
+        prev_block_hash: BlockHash,
+    ) -> Self {
+        Self {
+            index,
+            nonce,
+            timestamp,
+            payload,
+            prev_block_hash,
+            // we make here hash with the help of the above data in future
+            block_hash: vec![0; 32],
+        }
+    }
+}
