@@ -10,3 +10,4 @@ name = "blockchainlib"
 path = "src/lib.rs"
 
 [dependencies]
+hex = "0.3.2"
