@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use crate::{u128_bytes, u32_bytes, u64_bytes, Hashable};
+use crate::{difficulty_bytes_as_u128, u128_bytes, u32_bytes, u64_bytes, Hashable};
 
 use super::BlockHash;
 
@@ -11,17 +11,20 @@ pub struct Block {
     pub payload: String,
     pub block_hash: BlockHash,
     pub prev_block_hash: BlockHash,
+    pub difficulty: u128,
 }
 
 impl Debug for Block {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "\nBlock[{}]: \nBlock Hash: {} \ntimestamp: {} \npayload: {} \n",
+            "\nBlock[{}]: \nBlock Hash: {} \ntimestamp: {} \npayload: {} \nnonce: {} \nPrevious Block Hash: {} \n",
             &self.index,
             &hex::encode(&self.block_hash),
             &self.timestamp,
             &self.payload,
+            &self.nonce,
+            &hex::encode(&self.prev_block_hash),
         )
     }
 }
@@ -34,6 +37,7 @@ impl Block {
         timestamp: u128,
         payload: String,
         prev_block_hash: BlockHash,
+        difficulty: u128,
     ) -> Self {
         Self {
             index,
@@ -41,8 +45,19 @@ impl Block {
             timestamp,
             payload,
             prev_block_hash,
-            // we make here hash with the help of the above data in future
             block_hash: vec![0; 32],
+            difficulty,
+        }
+    }
+
+    pub fn mine(&mut self) {
+        for nonce_incrementor in 0..(u64::max_value()) {
+            self.nonce = nonce_incrementor;
+            let hash = self.hash();
+            if check_difficulty(&hash, self.difficulty) {
+                self.block_hash = hash;
+                return;
+            }
         }
     }
 }
@@ -63,4 +78,8 @@ impl Hashable for Block {
 
         bytes
     }
+}
+
+pub fn check_difficulty(hash: &BlockHash, difficulty: u128) -> bool {
+    difficulty > difficulty_bytes_as_u128(hash)
 }
