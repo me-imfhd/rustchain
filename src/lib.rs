@@ -66,7 +66,7 @@ pub fn u128_bytes (u: &u128) -> [u8; 16] {
         (u >> 8 * 0xf) as u8,
     ]
 }
-
+// converts our block hash to a u128 integer,
 pub fn difficulty_bytes_as_u128 (v: &Vec<u8>) -> u128 {
     ((v[31] as u128) << 0xf * 8) |
     ((v[30] as u128) << 0xe * 8) |
